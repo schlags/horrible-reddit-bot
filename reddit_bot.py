@@ -11,14 +11,14 @@ def quote():
         response = get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
         return loads(response.text)['quoteAuthor'], loads(response.text)['quoteText']
     except:
-        print("FUCKING RATE LIMITS!")
+        print("fricken RATE LIMITS!")
         time.sleep(5)
         failure_author, failure_message=quote()
         return failure_author, failure_message
 
 def scrape(target_comment):
     already_supplied=False
-    pattern_to_reply="shit"
+    pattern_to_reply=""
     try:
         if pattern_to_reply in target_comment.body:
             for reply in target_comment.replies:
@@ -60,9 +60,9 @@ def reply_switch(target_comment):
     try:
         if "-quote" in target_comment.body:
             author, text = quote()
-            return f"Here's a fucking quote: \n> {text}\n  - {author} {footer}"
+            return f"Here's a fricken quote: \n> {text}\n  - {author} {footer}"
         elif "-bully" in target_comment.body:
-            return f"You're a huge piece of shit, {target_comment.author} {footer}"
+            return f"You're a huge piece of crap, {target_comment.author} {footer}"
         elif "!schlag" in target_comment.body:
             return f"{target_comment.author}, I literally have no idea what to do with this command. {footer}"
         elif "shit" in target_comment.body:
@@ -96,13 +96,13 @@ def bot_run(subreddit_target):
         # time.sleep(5)
         amount_of_posts=0
     except prawexcept.RedditAPIException as e:
-        print("potty-mouth-bot is fucking rate limited from Reddit")
+        print("potty-mouth-bot is fricken rate limited from Reddit")
         print(e)
         txt=str(e)
         minutes_left=[int(s) for s in txt.split() if s.isdigit()]
         print(f"Sleeping for {minutes_left[0]} minutes...")
         time.sleep(minutes_left[0]*60)
-        print(f"Good to fucking go... Ramping up again!")
+        print(f"Good to fricken go... Ramping up again!")
         return
 
 r_username = os.getenv('RUSERNAME')
