@@ -1,0 +1,43 @@
+#!/bin/bash
+red=`tput setaf 1`
+reset=`tput sgr0`
+green=`tput setaf 2`
+
+echo "${red}It's about to get yeeted to $(git config remote.origin.url | cut -d'/' -f5 | cut -d'.' -f1)${reset}"
+echo "${green}-----------STATUS-----------${reset}"
+git status
+read -p "Are you ready for this? (y/n)" -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+#    say "Yeet cancelled"
+    exit 1
+fi
+echo "${green}-----------ADD FILES--------${reset}"
+git add .
+echo "${green}-----------COMMIT--------${reset}"
+if [ -z "$1" ]
+then
+git commit -m"Pushing quick changes to $(git diff --name-only --cached | tr '\n' ', ')"
+else
+git commit -m"$1"
+fi
+echo "${green}-----------PUSH--------${reset}"
+echo "Pushing to $(echo -n $(git remote -v) | cut -d$' ' -f5)"
+if (git push 2>&1 | grep -q -i "fatal: The current branch $(git branch --show-current) has no upstream branch."); then
+    echo "${red}This branch${green} $(git branch --show-current) ${reset}${red}does not yet exist in the upstream.${reset}"
+    read -p "Create it and continue push? (y/n)" -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Yeet failed or cancelled :("
+        # say "yeet cancelled"
+        exit 1
+    fi
+    git push --set-upstream origin $(git branch --show-current)
+fi
+echo "git "
+echo "${green}pushed.${reset}"
+echo "${green}-----------FINAL STATUS-----${reset}"
+git status
+# say "yeeeeet"
